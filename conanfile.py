@@ -10,7 +10,7 @@ class NaiveTsearchConan(ConanFile):
     homepage = "https://github.com/kulp/naive-tsearch"
     url = "https://github.com/kulp/naive-tsearch"
     license = "MIT"
-    exports_sources = "CMakeLists.txt", "README.md", "*.c", "*.h", "*.in", "LICENSE"
+    exports_sources = "CMakeLists.txt", "README.md", "*.c", "*.h", "*.in", "*.inc", "LICENSE"
     exports = "LICENSE"
     no_copy_source = True
     settings = "os", "arch", "compiler", "build_type"

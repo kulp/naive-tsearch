@@ -21,19 +21,27 @@ if(HAS_INCLUDE_SEARCH_H)
     check_c_source_compiles("#include <search.h>\nint main(){tdelete(NULL, NULL, NULL);}" HAS_FUNCTION_TDELETE)
     check_c_source_compiles("#include <search.h>\nint main(){tdelete(NULL, NULL);}" HAS_FUNCTION_TWALK)
 endif()
-configure_file(tsearch_cfg.h.in tsearch_cfg.h @ONLY)
+configure_file(tsearch.h.inc.in tsearch.h.inc @ONLY)
 
 add_library(naive-tsearch STATIC tsearch.c)
 add_library(naive-tsearch::naive-tsearch ALIAS naive-tsearch)
 target_include_directories(naive-tsearch PUBLIC
     "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>"
-    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>/${PROJECT_NAME}")
 set_target_properties(naive-tsearch PROPERTIES
-        PUBLIC_HEADER "tsearch.h;${PROJECT_BINARY_DIR}/tsearch_cfg.h"
+        PUBLIC_HEADER "tsearch.h;${PROJECT_BINARY_DIR}/tsearch.h.inc"
         C_STANDARD 99
         C_EXTENSIONS OFF)
 target_compile_definitions(naive-tsearch PRIVATE
     "$<IF:$<C_COMPILER_ID:MSVC>,/W4,-Wall -Wextra>")
+
+add_library(naive-tsearch-hdronly INTERFACE)
+add_library(naive-tsearch::naive-tsearch-hdronly ALIAS naive-tsearch-hdronly)
+target_include_directories(naive-tsearch-hdronly INTERFACE
+    "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>/${PROJECT_NAME}")
+set_target_properties(naive-tsearch-hdronly PROPERTIES
+        PUBLIC_HEADER "tsearch_hdronly.h;${PROJECT_BINARY_DIR}/tsearch.h.inc;tsearch.c.inc")
 
 option(NAIVE_TSEARCH_TESTS "Build ${PROJECT_NAME} tests + enable CTest")
 if(NAIVE_TSEARCH_TESTS)
@@ -53,19 +61,31 @@ if(NAIVE_TSEARCH_INSTALL)
 
     configure_file(naive-tsearch.pc.in naive-tsearch.pc @ONLY)
 
-    install(TARGETS naive-tsearch EXPORT naive-tsearchTargets
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/naive-tsearch
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    option(NAIVE_TSEARCH_INSTALL_LIB "Install ${PROJECT_NAME} library" ON)
+    if(NAIVE_TSEARCH_INSTALL_LIB)
+        install(TARGETS naive-tsearch EXPORT naive-tsearchTargets
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/naive-tsearch
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    endif()
+    option(NAIVE_TSEARCH_INSTALL_HDRONLY "Install ${PROJECT_NAME} header-only" ON)
+    if(NAIVE_TSEARCH_INSTALL_HDRONLY)
+        install(TARGETS naive-tsearch-hdronly EXPORT naive-tsearchTargets
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/naive-tsearch
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    endif()
+
     install(EXPORT naive-tsearchTargets
-          FILE naive-tsearchConfig.cmake
-          NAMESPACE naive-tsearch::
-          DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/naive-tsearch)
+        FILE naive-tsearchConfig.cmake
+        NAMESPACE naive-tsearch::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/naive-tsearch)
     install(FILES ${PROJECT_BINARY_DIR}/naive-tsearchConfigVersion.cmake
-          DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/naive-tsearch)
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/naive-tsearch)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/naive-tsearch.pc
-          DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
     install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/licenses/naive-tsearch)
 
     if(EXISTS "${PROJECT_SOURCE_DIR}/.gitignore")
