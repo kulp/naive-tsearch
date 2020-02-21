@@ -29,11 +29,11 @@ target_include_directories(naive-tsearch PUBLIC
     "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>/${PROJECT_NAME}")
 set_target_properties(naive-tsearch PROPERTIES
-        PUBLIC_HEADER "tsearch.h;${PROJECT_BINARY_DIR}/tsearch.h.inc"
-        C_STANDARD 99
-        C_EXTENSIONS OFF)
-target_compile_definitions(naive-tsearch PRIVATE
-    "$<IF:$<C_COMPILER_ID:MSVC>,/W4,-Wall -Wextra>")
+    PUBLIC_HEADER "tsearch.h;${PROJECT_BINARY_DIR}/tsearch.h.inc"
+    C_STANDARD 99
+    C_EXTENSIONS OFF)
+target_compile_options(naive-tsearch PRIVATE
+    $<IF:$<C_COMPILER_ID:MSVC>,/W4,-Wall -Wextra>)
 
 add_library(naive-tsearch-hdronly INTERFACE)
 add_library(naive-tsearch::naive-tsearch-hdronly ALIAS naive-tsearch-hdronly)
@@ -47,8 +47,8 @@ option(NAIVE_TSEARCH_TESTS "Build ${PROJECT_NAME} tests + enable CTest")
 if(NAIVE_TSEARCH_TESTS)
     add_executable(test_tsearch test_tsearch.c)
     target_link_libraries(test_tsearch PUBLIC naive-tsearch)
-    target_compile_definitions(test_tsearch PRIVATE
-        "$<IF:$<C_COMPILER_ID:MSVC>,/W4,-Wall -Wextra>")
+    target_compile_options(test_tsearch PRIVATE
+        $<IF:$<C_COMPILER_ID:MSVC>,/W4,-Wall -Wextra>)
     enable_testing()
     add_test(NAME test_tsearch COMMAND test_tsearch)
 endif()

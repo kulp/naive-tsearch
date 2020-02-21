@@ -10,6 +10,8 @@
 
 #cmakedefine01 HAS_FUNCTION_TWALK
 
+#cmakedefine01 HAS_FUNCTION_TDESTROY
+
 #if HAS_INCLUDE_SEARCH_H
 #include <search.h>
 #endif
@@ -41,3 +43,8 @@ NAIVE_TSEARCH_API
 void twalk(const void *root,
    void (*action)(const void *nodep, VISIT which, int depth));
 #endif
+
+#if !HAS_FUNCTION_TDESTROY
+void tdestroy(void *root, void (*free_node)(void *nodep));
+#endif
+

@@ -38,8 +38,6 @@ static void insert_node(void **rootp)
     tsearch(r, rootp, comp);
 }
 
-static void noop() { }
-
 int main(void)
 {
     void *root = NULL;
