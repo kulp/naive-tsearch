@@ -3,7 +3,9 @@ environment:
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
+install:
+  - python -m pip install conan
+  - python -m conans.conan user
+
 build_script:
-  - cmake . -DNAIVE_TSEARCH_TESTS=ON -DNAIVE_TSEARCH_INSTALL=ON
-  - cmake --build . --config Release
-  - ctest . -C Release
+  - python -m conans.conan create .
