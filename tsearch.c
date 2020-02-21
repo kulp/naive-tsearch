@@ -1,6 +1,14 @@
 // From Algorithms T and D, Knuth, TAoCP Vol. 3 (6.2.2)
-#include <search.h>
+
+#include "tsearch.h"
+
 #include <stdlib.h>
+
+#if defined(_MSC_VER)
+#define RESTRICT __restrict
+#else
+#define RESTRICT restrict
+#endif
 
 struct tree {
     // datum must be the first field in struct tree
@@ -53,7 +61,7 @@ void *tsearch(const void *key, void **rootp, cmp *compar)
     return *traverse(key, (void*)rootp, compar, 1, NULL);
 }
 
-void *tdelete(const void *restrict key, void **restrict rootp, cmp *compar)
+void *tdelete(const void *RESTRICT key, void **RESTRICT rootp, cmp *compar)
 {
     struct tree *parent = NULL;
     struct tree **q = traverse(key, (void*)rootp, compar, 0, &parent);

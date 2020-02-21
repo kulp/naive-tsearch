@@ -1,6 +1,7 @@
-#include <search.h>
-#include <stdlib.h>
+#include "tsearch.h"
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 struct record {
@@ -32,7 +33,7 @@ void act(const void *what, VISIT kind, int level)
 static void insert_node(void **rootp)
 {
     struct record *r = malloc(sizeof *r);
-    r->key = (random() >> 16) % 100;
+    r->key = (rand() >> 16) % 100;
     snprintf(r->val, sizeof r->val, "value is '%d'", r->key);
     tsearch(r, rootp, comp);
 }
