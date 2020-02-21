@@ -1,0 +1,9 @@
+environment:
+  PATH: C:\\Python37;C:\\Python37\Scripts;C:\Users\appveyor\AppData\Roaming\Python\Python37\Scripts;%PATH%
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+
+build_script:
+  - cmake . -DNAIVE_TSEARCH_TESTS=ON -DNAIVE_TSEARCH_INSTALL=ON
+  - cmake --build . --config Release
+  - ctest . -C Release
