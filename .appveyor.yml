@@ -1,0 +1,11 @@
+environment:
+  PATH: C:\\Python37;C:\\Python37\Scripts;C:\Users\appveyor\AppData\Roaming\Python\Python37\Scripts;%PATH%
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+
+install:
+  - python -m pip install conan
+  - python -m conans.conan user
+
+build_script:
+  - python -m conans.conan create .
