@@ -8,4 +8,7 @@ install:
   - python -m conans.conan user
 
 build_script:
-  - python -m conans.conan create .
+  - mkdir build && cd build
+  - python -m conans.conan install ..
+  - python -m conans.conan build ..
+  - ctest . -C Release --verbose

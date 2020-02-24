@@ -16,3 +16,4 @@ script:
   - cmake --build .
   - cmake --build . --target install
   - cmake --build . --target package_source
+  - ctest . --verbose
