@@ -13,25 +13,13 @@ include(CheckIncludeFile)
 include(CheckCSourceCompiles)
 include(GNUInstallDirs)
 
-check_include_file(search.h HAS_INCLUDE_SEARCH_H)
-if(HAS_INCLUDE_SEARCH_H)
-    check_c_source_compiles("#include <search.h>\nint main(){VISIT v = leaf;}\n" HAS_ENUM_VISIT)
-    check_c_source_compiles("#include <search.h>\n#include <stddef.h>\nint main(){tsearch(NULL, NULL, NULL);}\n" HAS_FUNCTION_TSEARCH)
-    check_c_source_compiles("#include <search.h>\n#include <stddef.h>\nint main(){tfind(NULL, NULL, NULL);}\n" HAS_FUNCTION_TFIND)
-    check_c_source_compiles("#include <search.h>\n#include <stddef.h>\nint main(){tdelete(NULL, NULL, NULL);}\n" HAS_FUNCTION_TDELETE)
-    check_c_source_compiles("#include <search.h>\n#include <stddef.h>\nint main(){twalk(NULL, NULL);}\n" HAS_FUNCTION_TWALK)
-    check_c_source_compiles("#include <search.h>\n#include <stddef.h>\nint main(){tdestroy(NULL, NULL);}\n" HAS_FUNCTION_TDESTROY)
-endif()
-configure_file(tsearch.h.inc.in tsearch.h.inc @ONLY)
-
 add_library(naive-tsearch STATIC tsearch.c)
 add_library(naive-tsearch::naive-tsearch ALIAS naive-tsearch)
 target_include_directories(naive-tsearch PUBLIC
-    "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>/${PROJECT_NAME}")
 set(NAIVE_TSEARCH_PUBLIC_HEADERS
     tsearch.h
-    "${PROJECT_BINARY_DIR}/tsearch.h.inc")
+    tsearch.h.inc)
 set_target_properties(naive-tsearch PROPERTIES
 #    PUBLIC_HEADER "${NAIVE_TSEARCH_PUBLIC_HEADERS}"
     C_STANDARD 99
@@ -42,12 +30,11 @@ target_compile_options(naive-tsearch PRIVATE
 add_library(naive-tsearch-hdronly INTERFACE)
 add_library(naive-tsearch::naive-tsearch-hdronly ALIAS naive-tsearch-hdronly)
 target_include_directories(naive-tsearch-hdronly INTERFACE
-    "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>/${PROJECT_NAME}")
 set(NAIVE_TSEARCH_HDRONLY_PUBLIC_HEADERS
     tsearch_hdronly.h
     tsearch.c.inc
-    "${PROJECT_BINARY_DIR}/tsearch.h.inc")
+    tsearch.h.inc)
 #set_target_properties(naive-tsearch-hdronly PROPERTIES
 #        PUBLIC_HEADER "${NAIVE_TSEARCH_HDRONLY_PUBLIC_HEADERS}")
 
