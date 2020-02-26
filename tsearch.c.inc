@@ -17,11 +17,11 @@ struct naive_tsearch_tree {
 static struct naive_tsearch_tree *naive_tsearch_null_tree_p = NULL;
 
 typedef int  naive_tsearch_cmp(const void *key1, const void *key2);
-typedef void naive_tsearch_act(const void *node, VISIT order, int level);
+typedef void naive_tsearch_act(const void *node, NAIVE_TSEARCH_VISIT order, int level);
 typedef void naive_tsearch_freer(void *node);
 
 // guaranteed to return a non-NULL pointer (might be a pointer to NULL)
-static struct naive_tsearch_tree **traverse(const void *key, struct naive_tsearch_tree **rootp, naive_tsearch_cmp *compar,
+static struct naive_tsearch_tree **naive_tsearch_traverse(const void *key, struct naive_tsearch_tree **rootp, naive_tsearch_cmp *compar,
                               int create, struct naive_tsearch_tree **parent)
 {
     if (*rootp == NULL) {
@@ -43,29 +43,29 @@ static struct naive_tsearch_tree **traverse(const void *key, struct naive_tsearc
     if (result == 0) {
         return rootp;
     } else if (result < 0) {
-        return traverse(key, &p->left , compar, create, parent);
+        return naive_tsearch_traverse(key, &p->left , compar, create, parent);
     } else {
-        return traverse(key, &p->right, compar, create, parent);
+        return naive_tsearch_traverse(key, &p->right, compar, create, parent);
     }
 }
 
 NAIVE_TSEARCH_API
-void *tfind(const void *key, void *const *rootp, naive_tsearch_cmp *compar)
+void *NAIVE_TSEARCH_TFIND(const void *key, void *const *rootp, naive_tsearch_cmp *compar)
 {
-    return *traverse(key, (void*)rootp, compar, 0, NULL);
+    return *naive_tsearch_traverse(key, (void*)rootp, compar, 0, NULL);
 }
 
 NAIVE_TSEARCH_API
-void *tsearch(const void *key, void **rootp, naive_tsearch_cmp *compar)
+void *NAIVE_TSEARCH_TSEARCH(const void *key, void **rootp, naive_tsearch_cmp *compar)
 {
-    return *traverse(key, (void*)rootp, compar, 1, NULL);
+    return *naive_tsearch_traverse(key, (void*)rootp, compar, 1, NULL);
 }
 
 NAIVE_TSEARCH_API
-void *tdelete(const void *NAIVE_TSEARCH_RESTRICT key, void **NAIVE_TSEARCH_RESTRICT rootp, naive_tsearch_cmp *compar)
+void *NAIVE_TSEARCH_TDELETE(const void *NAIVE_TSEARCH_RESTRICT key, void **NAIVE_TSEARCH_RESTRICT rootp, naive_tsearch_cmp *compar)
 {
     struct naive_tsearch_tree *parent = NULL;
-    struct naive_tsearch_tree **q = traverse(key, (void*)rootp, compar, 0, &parent);
+    struct naive_tsearch_tree **q = naive_tsearch_traverse(key, (void*)rootp, compar, 0, &parent);
     if (!(*q)->datum)
         return NULL;
 
@@ -99,9 +99,9 @@ void *tdelete(const void *NAIVE_TSEARCH_RESTRICT key, void **NAIVE_TSEARCH_RESTR
     return parent;
 }
 
-// walk(), unlike traverse(), cannot tail-recurse, and so we might want an
+// naive_tsearch_walk(), unlike naive_tsearch_traverse(), cannot tail-recurse, and so we might want an
 // iterative implementation for large trees
-static void walk(const void *root, naive_tsearch_act *action, int level)
+static void naive_tsearch_walk(const void *root, naive_tsearch_act *action, int level)
 {
     const struct naive_tsearch_tree *p = root;
     if (!p) return;
@@ -110,28 +110,28 @@ static void walk(const void *root, naive_tsearch_act *action, int level)
         action(p, leaf, level);
     } else {
         action(p, preorder , level);
-        walk(p->left , action, level + 1);
+        naive_tsearch_walk(p->left , action, level + 1);
         action(p, postorder, level);
-        walk(p->right, action, level + 1);
+        naive_tsearch_walk(p->right, action, level + 1);
         action(p, endorder , level);
     }
 }
 
 NAIVE_TSEARCH_API
-void twalk(const void *root, naive_tsearch_act *action)
+void NAIVE_TSEARCH_TWALK(const void *root, naive_tsearch_act *action)
 {
-    walk(root, action, 0);
+    naive_tsearch_walk(root, action, 0);
 }
 
 NAIVE_TSEARCH_API
-void tdestroy(void *root, naive_tsearch_freer *free_node)
+void NAIVE_TSEARCH_TDESTROY(void *root, naive_tsearch_freer *free_node)
 {
     struct naive_tsearch_tree *p = root;
     if (!p)
         return;
 
-    tdestroy(p->left , free_node);
-    tdestroy(p->right, free_node);
+    NAIVE_TSEARCH_TDESTROY(p->left , free_node);
+    NAIVE_TSEARCH_TDESTROY(p->right, free_node);
     free_node((void*)p->datum);
     free(p);
 }
