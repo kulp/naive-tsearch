@@ -14,6 +14,7 @@ class NaiveTsearchConan(ConanFile):
     exports = "LICENSE"
     no_copy_source = True
     settings = "os", "arch", "compiler", "build_type"
+    requires = "boost/1.72.0"
     generators = "cmake"
 
     def set_version(self):
@@ -36,6 +37,7 @@ class NaiveTsearchConan(ConanFile):
         self._cmake = CMake(self)
         self._cmake.definitions["NAIVE_TSEARCH_INSTALL"] = True
         self._cmake.definitions["NAIVE_TSEARCH_TESTS"] = True
+        self._cmake.definitions["Boost_USE_STATIC_LIBS"] = not self.options["boost"].shared
         self._cmake.configure()
         return self._cmake
 

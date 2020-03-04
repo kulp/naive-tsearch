@@ -1,4 +1,9 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.12)
+
+set(NAIVE_TSEARCH_MAIN_PROJECT OFF)
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    set(NAIVE_TSEARCH_MAIN_PROJECT ON)
+endif()
 
 project(naive-tsearch VERSION 0.1 LANGUAGES C
     HOMEPAGE_URL "https://github.com/kulp/naive-tsearch"
@@ -16,6 +21,7 @@ include(GNUInstallDirs)
 add_library(naive-tsearch STATIC tsearch.c)
 add_library(naive-tsearch::naive-tsearch ALIAS naive-tsearch)
 target_include_directories(naive-tsearch PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>/${PROJECT_NAME}")
 set(NAIVE_TSEARCH_PUBLIC_HEADERS
     tsearch.h
@@ -30,6 +36,7 @@ target_compile_options(naive-tsearch PRIVATE
 add_library(naive-tsearch-hdronly INTERFACE)
 add_library(naive-tsearch::naive-tsearch-hdronly ALIAS naive-tsearch-hdronly)
 target_include_directories(naive-tsearch-hdronly INTERFACE
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>/${PROJECT_NAME}")
 set(NAIVE_TSEARCH_HDRONLY_PUBLIC_HEADERS
     tsearch_hdronly.h
@@ -38,17 +45,13 @@ set(NAIVE_TSEARCH_HDRONLY_PUBLIC_HEADERS
 #set_target_properties(naive-tsearch-hdronly PROPERTIES
 #        PUBLIC_HEADER "${NAIVE_TSEARCH_HDRONLY_PUBLIC_HEADERS}")
 
-option(NAIVE_TSEARCH_TESTS "Build ${PROJECT_NAME} tests + enable CTest")
+option(NAIVE_TSEARCH_TESTS "Build ${PROJECT_NAME} tests + enable CTest" "${NAIVE_TSEARCH_MAIN_PROJECT}")
 if(NAIVE_TSEARCH_TESTS)
-    add_executable(test_tsearch test_tsearch.c)
-    target_link_libraries(test_tsearch PUBLIC naive-tsearch)
-    target_compile_options(test_tsearch PRIVATE
-        $<IF:$<C_COMPILER_ID:MSVC>,/W4,-Wall -Wextra>)
     enable_testing()
-    add_test(NAME test_tsearch COMMAND test_tsearch)
+    add_subdirectory(tests)
 endif()
 
-option(NAIVE_TSEARCH_INSTALL "Enable ${PROJECT_NAME} install")
+option(NAIVE_TSEARCH_INSTALL "Enable ${PROJECT_NAME} install" "${NAIVE_TSEARCH_MAIN_PROJECT}")
 if(NAIVE_TSEARCH_INSTALL)
     include(CMakePackageConfigHelpers)
     write_basic_package_version_file(naive-tsearchConfigVersion.cmake
