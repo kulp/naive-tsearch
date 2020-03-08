@@ -2,12 +2,6 @@
 
 #include <stdlib.h>
 
-#if defined(_MSC_VER)
-#define NAIVE_TSEARCH_RESTRICT __restrict
-#else
-#define NAIVE_TSEARCH_RESTRICT restrict
-#endif
-
 struct naive_tsearch_tree {
     // datum must be the first field in struct naive_tsearch_tree
     const void *datum;
@@ -26,7 +20,7 @@ static struct naive_tsearch_tree **naive_tsearch_traverse(const void *key, struc
 {
     if (*rootp == NULL) {
         if (create) {
-            struct naive_tsearch_tree *q = *rootp = malloc(sizeof *q);
+            struct naive_tsearch_tree *q = *rootp = (struct naive_tsearch_tree *) malloc(sizeof *q);
             q->left = q->right = NULL;
             q->datum = key;
             return rootp;
@@ -52,20 +46,20 @@ static struct naive_tsearch_tree **naive_tsearch_traverse(const void *key, struc
 NAIVE_TSEARCH_API
 void *NAIVE_TSEARCH_TFIND(const void *key, void *const *rootp, naive_tsearch_cmp *compar)
 {
-    return *naive_tsearch_traverse(key, (void*)rootp, compar, 0, NULL);
+    return *naive_tsearch_traverse(key, (struct naive_tsearch_tree**)rootp, compar, 0, NULL);
 }
 
 NAIVE_TSEARCH_API
 void *NAIVE_TSEARCH_TSEARCH(const void *key, void **rootp, naive_tsearch_cmp *compar)
 {
-    return *naive_tsearch_traverse(key, (void*)rootp, compar, 1, NULL);
+    return *naive_tsearch_traverse(key, (struct naive_tsearch_tree**)rootp, compar, 1, NULL);
 }
 
 NAIVE_TSEARCH_API
-void *NAIVE_TSEARCH_TDELETE(const void *NAIVE_TSEARCH_RESTRICT key, void **NAIVE_TSEARCH_RESTRICT rootp, naive_tsearch_cmp *compar)
+void *NAIVE_TSEARCH_TDELETE(const void *__restrict key, void **__restrict rootp, naive_tsearch_cmp *compar)
 {
     struct naive_tsearch_tree *parent = NULL;
-    struct naive_tsearch_tree **q = naive_tsearch_traverse(key, (void*)rootp, compar, 0, &parent);
+    struct naive_tsearch_tree **q = naive_tsearch_traverse(key, (struct naive_tsearch_tree**)rootp, compar, 0, &parent);
     if (!(*q)->datum)
         return NULL;
 
@@ -103,7 +97,7 @@ void *NAIVE_TSEARCH_TDELETE(const void *NAIVE_TSEARCH_RESTRICT key, void **NAIVE
 // iterative implementation for large trees
 static void naive_tsearch_walk(const void *root, naive_tsearch_act *action, int level)
 {
-    const struct naive_tsearch_tree *p = root;
+    const struct naive_tsearch_tree *p = (const struct naive_tsearch_tree *)root;
     if (!p) return;
 
     if (!p->left && !p->right) {
@@ -126,7 +120,7 @@ void NAIVE_TSEARCH_TWALK(const void *root, naive_tsearch_act *action)
 NAIVE_TSEARCH_API
 void NAIVE_TSEARCH_TDESTROY(void *root, naive_tsearch_freer *free_node)
 {
-    struct naive_tsearch_tree *p = root;
+    struct naive_tsearch_tree *p = (struct naive_tsearch_tree *)root;
     if (!p)
         return;
 
