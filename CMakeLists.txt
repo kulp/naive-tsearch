@@ -24,10 +24,10 @@ target_include_directories(naive-tsearch PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>/${PROJECT_NAME}")
 set(NAIVE_TSEARCH_PUBLIC_HEADERS
+    search.h
     tsearch.h
     tsearch.h.inc)
 set_target_properties(naive-tsearch PROPERTIES
-#    PUBLIC_HEADER "${NAIVE_TSEARCH_PUBLIC_HEADERS}"
     C_STANDARD 99
     C_EXTENSIONS OFF)
 target_compile_options(naive-tsearch PRIVATE
@@ -38,12 +38,12 @@ add_library(naive-tsearch::naive-tsearch-hdronly ALIAS naive-tsearch-hdronly)
 target_include_directories(naive-tsearch-hdronly INTERFACE
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>/${PROJECT_NAME}")
+target_compile_definitions(naive-tsearch-hdronly INTERFACE
+    NAIVE_TSEARCH_HDRONLY)
 set(NAIVE_TSEARCH_HDRONLY_PUBLIC_HEADERS
     tsearch_hdronly.h
     tsearch.c.inc
     tsearch.h.inc)
-#set_target_properties(naive-tsearch-hdronly PROPERTIES
-#        PUBLIC_HEADER "${NAIVE_TSEARCH_HDRONLY_PUBLIC_HEADERS}")
 
 option(NAIVE_TSEARCH_TESTS "Build ${PROJECT_NAME} tests + enable CTest" "${NAIVE_TSEARCH_MAIN_PROJECT}")
 if(NAIVE_TSEARCH_TESTS)
@@ -59,24 +59,19 @@ if(NAIVE_TSEARCH_INSTALL)
 
     configure_file(naive-tsearch.pc.in naive-tsearch.pc @ONLY)
 
-    option(NAIVE_TSEARCH_INSTALL_LIB "Install ${PROJECT_NAME} library" ON)
-    if(NAIVE_TSEARCH_INSTALL_LIB)
-        install(TARGETS naive-tsearch EXPORT naive-tsearchTargets
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-        install(FILES ${NAIVE_TSEARCH_PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
-    endif()
-    option(NAIVE_TSEARCH_INSTALL_HDRONLY "Install ${PROJECT_NAME} header-only" ON)
-    if(NAIVE_TSEARCH_INSTALL_HDRONLY)
-        install(TARGETS naive-tsearch-hdronly EXPORT naive-tsearchTargets
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-        install(FILES ${NAIVE_TSEARCH_HDRONLY_PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
-    endif()
+    install(TARGETS naive-tsearch EXPORT naive-tsearchTargets
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(FILES ${NAIVE_TSEARCH_PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+
+    install(TARGETS naive-tsearch-hdronly EXPORT naive-tsearchTargets
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(FILES ${NAIVE_TSEARCH_HDRONLY_PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
 
     install(EXPORT naive-tsearchTargets
         FILE naive-tsearchConfig.cmake

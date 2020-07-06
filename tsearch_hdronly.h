@@ -1,9 +1,9 @@
-#ifndef TSEARCH_HDRONLY_H_
-#define TSEARCH_HDRONLY_H_
+#ifndef NAIVE_TSEARCH_HDRONLY_H_
+#define NAIVE_TSEARCH_HDRONLY_H_
 
 #define NAIVE_TSEARCH_PREFIX
 #define NAIVE_TSEARCH_API static
 #include "tsearch.h.inc"
 #include "tsearch.c.inc"
 
-#endif // TSEARCH_HDRONLY_H_
+#endif // NAIVE_TSEARCH_HDRONLY_H_
