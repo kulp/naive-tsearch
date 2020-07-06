@@ -1,5 +1,5 @@
-#ifndef TSEARCH_H_
-#define TSEARCH_H_
+#ifndef NAIVE_TSEARCH_H_
+#define NAIVE_TSEARCH_H_
 
 #if defined(__cplusplus)
 extern "C" {
@@ -13,4 +13,4 @@ extern "C" {
 }
 #endif
 
-#endif // TSEARCH_H_
+#endif // NAIVE_TSEARCH_H_

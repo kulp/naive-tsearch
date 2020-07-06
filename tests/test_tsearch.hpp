@@ -7,6 +7,9 @@
 #include "tsearch_hdronly.h"
 #elif defined(TEST_SYSTEM_TSEARCH)
 #include <search.h>
+#if defined(NAIVE_TSEARCH_SEARCH_H_)
+#error "Did not include system tsearch library!"
+#endif
 #else
 #error "Don't know what tsearch implementation to test"
 #endif
