@@ -1,6 +1,6 @@
 language: cpp
 
-matrix:
+jobs:
   include:
   - os: linux
     dist: bionic
@@ -22,3 +22,5 @@ script:
   - cmake --build . --target install
   - cmake --build . --target package_source
   - ctest . --verbose
+  - cpack
+  - cpack -G TGZ --config CPackSourceConfig.cmake
