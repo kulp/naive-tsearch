@@ -15,4 +15,5 @@ files:
 - tsearch.h.inc
 - tsearch_hdronly.h
 subdirs:
+- docs
 - tests
