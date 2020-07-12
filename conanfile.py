@@ -14,7 +14,7 @@ class NaiveTsearchConan(ConanFile):
     exports = "LICENSE"
     no_copy_source = True
     settings = "os", "arch", "compiler", "build_type"
-    requires = "boost/1.73.0"
+    requires = "boost/[>1.70.0]"
     generators = "cmake"
 
     def set_version(self):
