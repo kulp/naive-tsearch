@@ -11,7 +11,7 @@ project(naive-tsearch VERSION 0.1 LANGUAGES C
 
 if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
     include("${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
-    conan_basic_setup()
+    conan_basic_setup(TARGETS)
 endif()
 
 include(CheckIncludeFile)
