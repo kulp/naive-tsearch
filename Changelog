@@ -1,0 +1,24 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+
+- Initial import based on gist at github (https://gist.github.com/kulp/3971591)
+- Add CMake build system
+- Add initial unit tests using Boost.Test
+- Use conan (conan.io) optionally for providing dependencies
+- Fix MSVC compile warnings about /W4 overriding /W3
+
+### Changed
+
+(nothing)
+
+### Removed
+
+(nothing)
