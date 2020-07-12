@@ -23,4 +23,8 @@ script:
   - cmake --build . --target package_source
   - ctest . --verbose
   - cpack
-  - cpack -G TGZ --config CPackSourceConfig.cmake
+  - cd "$TRAVIS_BUILD_DIR" && python3 create_source_tarball.py
+  - tar xvf naive-tsearch-*.tar.gz && rm *.tar.* && cd naive-tsearch-*
+  - mkdir build && cd build
+  - cmake .. -DNAIVE_TSEARCH_INSTALL=ON -DNAIVE_TSEARCH_TESTS=ON -DCMAKE_INSTALL_PREFIX=prefix
+  - cmake --build .
