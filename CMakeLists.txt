@@ -5,7 +5,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     set(NAIVE_TSEARCH_MAIN_PROJECT ON)
 endif()
 
-project(naive-tsearch VERSION 0.1 LANGUAGES C
+file(READ "NAIVETSEARCH_VERSION" VERSION)
+string(STRIP "${VERSION}" VERSION)
+
+project(naive-tsearch VERSION "${VERSION}" LANGUAGES C
     HOMEPAGE_URL "https://github.com/kulp/naive-tsearch"
     DESCRIPTION "A simple tsearch() implementation for platforms without one")
 
