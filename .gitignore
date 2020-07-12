@@ -1,5 +1,9 @@
 naive-tsearchConfigVersion.cmake
 
+# Releases
+*.tar.gz
+*.tar.xz
+
 # Prerequisites
 *.d
 

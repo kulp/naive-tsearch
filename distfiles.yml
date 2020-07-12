@@ -1,0 +1,18 @@
+files:
+- Changelog
+- CMakeLists.txt
+- conanfile.py
+- create_source_tarball.py
+- distfiles.yml
+- LICENSE
+- NAIVETSEARCH_VERSION
+- naive-tsearch.pc.in
+- README.md
+- search.h
+- tsearch.c
+- tsearch.c.inc
+- tsearch.h
+- tsearch.h.inc
+- tsearch_hdronly.h
+subdirs:
+- tests

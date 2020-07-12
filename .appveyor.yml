@@ -3,6 +3,8 @@ environment:
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
+configuration: Release
+
 install:
   - python -m pip install conan
   - python -m conans.conan user
@@ -11,6 +13,10 @@ build_script:
   - mkdir build && cd build
   - python -m conans.conan install ..
   - python -m conans.conan build ..
-  - ctest . -C Release --verbose
-  - cpack
-  - cpack -G TGZ --config CPackSourceConfig.cmake
+  - ctest . -C %CONFIGURATION% --verbose
+  - cpack -C %CONFIGURATION%
+  - cd %APPVEYOR_BUILD_FOLDER% && python create_source_tarball.py
+  - 7z x -y naive-tsearch-*.tar.gz && 7z x -y naive-tsearch-*.tar && del naive-tsearch-*.tar && del *.tar.* && cd naive-tsearch-*
+  - mkdir build && cd build
+  - python -m conans.conan install ..
+  - python -m conans.conan build ..

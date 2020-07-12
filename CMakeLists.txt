@@ -90,35 +90,6 @@ if(NAIVE_TSEARCH_INSTALL)
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
     install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/licenses/${PROJECT_NAME})
 
-    if(EXISTS "${PROJECT_SOURCE_DIR}/.gitignore")
-        # Simple glob to regex conversion (.gitignore => CPACK_SOURCE_IGNORE_FILES)
-        file(READ ".gitignore" DOT_GITIGNORE)
-        string(REPLACE ";" "RANDOMSEQUENCE" DOT_GITIGNORE "${DOT_GITIGNORE}")
-        string(REPLACE "\n" ";" DOT_GITIGNORE "${DOT_GITIGNORE}")
-        string(REPLACE "RANDOMSEQUENCE" "\\;" DOT_GITIGNORE "${DOT_GITIGNORE}")
-        foreach(IGNORE_LINE ${DOT_GITIGNORE})
-            if(NOT IGNORE_LINE OR IGNORE_LINE MATCHES "^#")
-                continue()
-            endif()
-            string(REPLACE "\\" "\\\\" IGNORE_LINE "${IGNORE_LINE}")
-            string(REPLACE "." "\\\\." IGNORE_LINE "${IGNORE_LINE}")
-            string(REPLACE "*" ".*" IGNORE_LINE "${IGNORE_LINE}")
-            string(REPLACE "+" "\\\\+" IGNORE_LINE "${IGNORE_LINE}")
-            list(APPEND CPACK_SOURCE_IGNORE_FILES "${IGNORE_LINE}")
-        endforeach()
-    endif()
-
-    # extra ignored files
-    list(APPEND CPACK_SOURCE_IGNORE_FILES
-        .ci
-        .editorconfig
-        .git
-        .gitignore
-        .travis.yml
-        .appveyor.yml
-    )
-    set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
     set(CPACK_GENERATOR "TGZ;TXZ")
-    set(CPACK_SOURCE_GENERATOR "TGZ;TXZ")
     include(CPack)
 endif()
