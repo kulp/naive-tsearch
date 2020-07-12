@@ -1,5 +1,4 @@
 from conans import CMake, ConanFile
-from conans.errors import ConanException
 import os
 
 
@@ -10,7 +9,8 @@ class NaiveTsearchConan(ConanFile):
     homepage = "https://github.com/kulp/naive-tsearch"
     url = "https://github.com/kulp/naive-tsearch"
     license = "MIT"
-    exports_sources = "CMakeLists.txt", "Changelog", "README.md", "*.c", "*.h", "*.in", "*.inc", "LICENSE", "tests/**"
+    exports_sources = "CMakeLists.txt", "create_release.py", "Changelog", "distfiles.yml", "README.md", "NAIVETSEARCH_VERSION", \
+                      "*.c", "*.h", "*.in", "*.inc", "LICENSE", "tests/**"
     exports = "LICENSE"
     no_copy_source = True
     settings = "os", "arch", "compiler", "build_type"
@@ -18,12 +18,7 @@ class NaiveTsearchConan(ConanFile):
     generators = "cmake"
 
     def set_version(self):
-        import re
-        m = re.search(r"project\(.*VERSION ([0-9a-zA-Z.-]+)[ )]",
-                      open(os.path.join(self.recipe_folder, "CMakeLists.txt")).read())
-        if not m:
-            raise ConanException("Could not extract version from CMakeLists.txt")
-        self.version = m.group(1)
+        self.version = open(os.path.join(self.recipe_folder, "NAIVETSEARCH_VERSION")).read().strip()
 
     _cmake = None
 
