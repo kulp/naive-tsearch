@@ -9,6 +9,10 @@ project(naive-tsearch VERSION 0.1 LANGUAGES C
     HOMEPAGE_URL "https://github.com/kulp/naive-tsearch"
     DESCRIPTION "A simple tsearch() implementation for platforms without one")
 
+if(MSVC)
+    string(REGEX REPLACE "/W[0-9]" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+endif()
+
 if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
     include("${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
     conan_basic_setup(TARGETS)
@@ -103,6 +107,7 @@ if(NAIVE_TSEARCH_INSTALL)
 
     # extra ignored files
     list(APPEND CPACK_SOURCE_IGNORE_FILES
+        .ci
         .editorconfig
         .git
         .gitignore
