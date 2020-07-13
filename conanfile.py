@@ -16,6 +16,12 @@ class NaiveTsearchConan(ConanFile):
     settings = "os", "arch", "compiler", "build_type"
     requires = "boost/[>1.70.0]"
     generators = "cmake"
+    options = {
+        "header_only": [True, False],
+    }
+    default_options = {
+        "header_only": True,
+    }
 
     def set_version(self):
         self.version = open(os.path.join(self.recipe_folder, "NAIVETSEARCH_VERSION")).read().strip()
@@ -44,6 +50,12 @@ class NaiveTsearchConan(ConanFile):
         cmake = self._configure_cmake()
         cmake.install()
 
+    def package_id(self):
+        del self.info.options.header_only
+
     def package_info(self):
-        self.cpp_info.libs = ["naive-tsearch"]
+        if self.options.header_only:
+            self.cpp_info.libs = ["naive-tsearch"]
+        else:
+            self.cpp_info.defines = ["NAIVE_TSEARCH_HDRONLY"]
         self.cpp_info.includedirs.append(os.path.join("include", "naive-tsearch"))
