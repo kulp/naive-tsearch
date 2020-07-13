@@ -1,6 +1,7 @@
 enable_language(CXX)
 
 if(MSVC)
+    # Remove warning flags to avoid `cl : Command line warning D9025 : overriding '/W3' with '/W4'` warning
     string(REGEX REPLACE "/W[0-9]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 endif()
 
@@ -39,6 +40,7 @@ function(naive_tsearch_add_unittest NAME)
     set_target_properties(${NAME} PROPERTIES CXX_STANDARD 11)
     add_test(NAME "test_${NAME}" COMMAND ${NAME})
     if(MSVC)
+        # specify exception handler. This fixes `warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc`
         target_compile_options(${NAME} PRIVATE /EHsc)
     endif()
 endfunction()

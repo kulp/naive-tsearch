@@ -13,6 +13,7 @@ project(naive-tsearch VERSION "${VERSION}" LANGUAGES C
     DESCRIPTION "A simple tsearch() implementation for platforms without one")
 
 if(MSVC)
+    # Remove warning flags to avoid `cl : Command line warning D9025 : overriding '/W3' with '/W4'` warning
     string(REGEX REPLACE "/W[0-9]" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
 endif()
 
