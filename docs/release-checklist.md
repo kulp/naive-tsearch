@@ -36,5 +36,5 @@ Run `git reset --hard HEAD` when unsure.
 14. Push the commits + tag.
 15. Upload the source tarballs to the release page.
 16. Bump the version in the `NAIVETSEARCH_VERSION` file. Remember to use semantic versioning.
-17. Add a new section `X.Y.Z+1` to the `Changelog`, including `Added/Changed/Removed` subsections.
+17. Add a new section `[Unreleased]` to the `Changelog`, including `Added/Changed/Removed` subsections.
 18. A new development cycle begins...
