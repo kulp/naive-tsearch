@@ -6,7 +6,7 @@ environment:
 configuration: Release
 
 install:
-  - python -m pip install conan
+  - python -m pip install conan PyYAML
   - python -m conans.conan user
 
 build_script:
