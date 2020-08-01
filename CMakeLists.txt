@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.10)
 
 set(NAIVE_TSEARCH_MAIN_PROJECT OFF)
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -9,8 +9,10 @@ file(READ "NAIVETSEARCH_VERSION" VERSION)
 string(STRIP "${VERSION}" VERSION)
 
 project(naive-tsearch VERSION "${VERSION}" LANGUAGES C
-    HOMEPAGE_URL "https://github.com/kulp/naive-tsearch"
     DESCRIPTION "A simple tsearch() implementation for platforms without one")
+
+# Using HOMEPAGE_URL in `project` requires CMake >=3.12
+set(PROJECT_HOMEPAGE_URL "https://github.com/kulp/naive-tsearch")
 
 if(MSVC)
     # Remove warning flags to avoid `cl : Command line warning D9025 : overriding '/W3' with '/W4'` warning
