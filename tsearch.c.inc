@@ -60,7 +60,7 @@ void *NAIVE_TSEARCH_TDELETE(const void *__restrict key, void **__restrict rootp,
 {
     struct naive_tsearch_tree *parent = NULL;
     struct naive_tsearch_tree **q = naive_tsearch_traverse(key, (struct naive_tsearch_tree**)rootp, compar, 0, &parent);
-    if (!(*q)->datum)
+    if (!*q || !(*q)->datum)
         return NULL;
 
     struct naive_tsearch_tree *t = *q;
@@ -70,22 +70,22 @@ void *NAIVE_TSEARCH_TDELETE(const void *__restrict key, void **__restrict rootp,
             break;
         }
 
-        struct naive_tsearch_tree **r = &t->right;
-        if (!(*r)->left) {
-            (*r)->left = t->left;
-            *q = *r;
+        struct naive_tsearch_tree *r = t->right;
+        if (!r->left) {
+            r->left = t->left;
+            *q = r;
             break;
         }
 
-        struct naive_tsearch_tree **s = &(*r)->left;
-        while ((*s)->left) {
+        struct naive_tsearch_tree *s = r->left;
+        while (s->left) {
             r = s;
-            s = &(*r)->left;
+            s = r->left;
         }
-        (*s)->left = t->left;
-        (*r)->left = (*s)->right;
-        (*s)->right = t->right;
-        *q = *s;
+        s->left = t->left;
+        r->left = s->right;
+        s->right = t->right;
+        *q = s;
     } while (0);
 
     free(t);
