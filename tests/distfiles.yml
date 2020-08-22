@@ -3,5 +3,6 @@ files:
 - distfiles.yml
 - main.cpp
 - test_tsearch.hpp
+- test_delete.cpp
 - test_walk.cpp
 subdirs: []
