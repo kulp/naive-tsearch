@@ -29,6 +29,7 @@ find_package(Boost REQUIRED COMPONENTS unit_test_framework)
 function(naive_tsearch_add_unittest NAME)
     add_executable(${NAME}
         main.cpp
+        test_delete.cpp
         test_walk.cpp
     )
     target_link_libraries(${NAME} PRIVATE

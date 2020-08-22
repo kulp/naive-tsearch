@@ -1,4 +1,7 @@
 // From Algorithms T and D, Knuth, TAoCP Vol. 3 (6.2.2)
+// Implements a Binary Search Tree: each node P has zero, one or two children.
+// Each left-child is "less" than its parent, and each right-child is
+// "greater" than its parent.
 
 #include <stdlib.h>
 
@@ -60,32 +63,49 @@ void *NAIVE_TSEARCH_TDELETE(const void *__restrict key, void **__restrict rootp,
 {
     struct naive_tsearch_tree *parent = NULL;
     struct naive_tsearch_tree **q = naive_tsearch_traverse(key, (struct naive_tsearch_tree**)rootp, compar, 0, &parent);
-    if (!(*q)->datum)
+    if (!*q || !(*q)->datum)
         return NULL;
 
+    // Now `t` is the doomed node, and `*q` is where we will put the doomed
+    // node's replacement.
+    // In every case below, `t` is replaced by the smallest of its descendants
+    // that is greater than `t`, or, if no such descendant exists, then it is
+    // replaced by its left child (which is its only child in that case).
     struct naive_tsearch_tree *t = *q;
     do {
+        // Case 1:
+        // `t` has no right child, so all its descendants are smaller than it.
+        // It can be replaced by its left child, if any.
         if (!t->right) {
             *q = t->left;
             break;
         }
 
-        struct naive_tsearch_tree **r = &t->right;
-        if (!(*r)->left) {
-            (*r)->left = t->left;
-            *q = *r;
+        // Case 2:
+        // `t` has a right child `r`, so some of `t`'s descendants are greater
+        // than `t`, but `r` has no left child, so all of `r`'s descendants are
+        // greater than `r`. `t` can be replaced by `r`, and `r` can adopt
+        // `t`'s left child.
+        struct naive_tsearch_tree *r = t->right;
+        if (!r->left) {
+            r->left = t->left;
+            *q = r;
             break;
         }
 
-        struct naive_tsearch_tree **s = &(*r)->left;
-        while ((*s)->left) {
+        // Case 3:
+        // `t` has a right child `r`, and `r` has a left child `s`. The node
+        // that should replace `t` is the smallest descendant of `r`, which
+        // will be its left-most descendant.
+        struct naive_tsearch_tree *s = r->left;
+        while (s->left) {
             r = s;
-            s = &(*r)->left;
+            s = r->left;
         }
-        (*s)->left = t->left;
-        (*r)->left = (*s)->right;
-        (*s)->right = t->right;
-        *q = *s;
+        s->left = t->left;
+        r->left = s->right;
+        s->right = t->right;
+        *q = s;
     } while (0);
 
     free(t);
