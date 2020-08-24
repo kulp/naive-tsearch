@@ -6,7 +6,8 @@ In total 2 commits should be made: one for the release, and one for the post-rel
 2. Make sure you're on the current master and that the tree is in pristine condition using `git status`.
 Run `git reset --hard HEAD` and `git clean -x -f` when unsure.
 3. Bump the version in `NAIVETSEARCH_VERSION` (found in the root directory) and rename the `[Unreleased]` section of the `Changelog.md` to the version used in `NAIVETSEARCH_VERSION`. Use the format `[x.y.z] - YYY-MM-DD` as name for the new release section.
-  Keep empty added/changed/removed subsections.
+  Remove empty added/changed/removed subsections.
+  Update URLs at the bottom of the file.
   Read [keep a changelog](https://keepachangelog.com/) for the conventions.
   **Don't commit yet.**
 4. Run the following commands to test the repository:
