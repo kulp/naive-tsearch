@@ -1,5 +1,5 @@
 files:
-- Changelog
+- Changelog.md
 - CMakeLists.txt
 - conanfile.py
 - create_source_tarball.py
