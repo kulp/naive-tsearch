@@ -31,8 +31,6 @@ for tar_compression in tar_compressions:
 
 
 # Zero the embedded timestamp in the gzip'ed tarball
-targz = Path("naive-tsearch-{}.tar.gz".format(version))
-if targz.is_file():
-    with targz.open("r+b") as f:
-        f.seek(4, 0)
-        f.write(b"\x00\x00\x00\x00")
+with open("naive-tsearch-{}.tar.gz".format(version), "r+b") as f:
+    f.seek(4, 0)
+    f.write(b"\x00\x00\x00\x00")
