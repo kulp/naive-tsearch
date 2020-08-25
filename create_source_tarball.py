@@ -28,3 +28,9 @@ for tar_compression in tar_compressions:
             name = Path(tar_filebasename) / file.relative_to(WORKPATH)
             print("Adding {}...".format(name))
             tar.add(name=file, arcname=str(name))
+
+
+# Zero the embedded timestamp in the gzip'ed tarball
+with open("naive-tsearch-{}.tar.gz".format(version), "r+b") as f:
+    f.seek(4, 0)
+    f.write(b"\x00\x00\x00\x00")
