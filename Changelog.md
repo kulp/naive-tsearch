@@ -20,17 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.1] - 2020-08-23
 
-### Added
-
-(nothing)
-
 ### Changed
 
 - Fixed undefined behavior in `tdelete` (#10)
-
-### Removed
-
-(nothing)
 
 ## [0.1.0] - 2020-07-22
 
@@ -42,14 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use conan (conan.io) optionally for providing dependencies
 - Fix MSVC compile warnings about /W4 overriding /W3
 
-### Changed
-
-(nothing)
-
-### Removed
-
-(nothing)
-
+-------
 [0.1.1]: https://github.com/kulp/naive-tsearch/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/kulp/naive-tsearch/releases/tag/v0.1.0
 
